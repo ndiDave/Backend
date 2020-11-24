@@ -2,8 +2,7 @@ extends baseEmail
 
 block content
   p Hi #{firstName},
-  p Welcome to Savvy Plan the Financial Advising platform, we're Happy to have you.
-  p We're all a big familiy here, so make sure to upload your user photo so we get to know you a bit better!
+  p You have updated your email address to #{updatedAdvisor.email}
   table.btn.btn-primary(role='presentation', border='0', cellpadding='0', cellspacing='0')
     tbody
       tr
@@ -12,5 +11,5 @@ block content
             tbody
               tr
                 td
-                  a(href=`${url}`, target='_blank') Confirm
-  p - Ben Mcloughlin, CEO
+                  a(href=`${url}`, target='_blank') Log In
+  p If you didn't change your email, please secure your account!

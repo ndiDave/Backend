@@ -34,11 +34,9 @@ const userSchema = new Schema({
       message: 'Passwords are not the same',
     },
   },
-  advisor: {
-    type: { type: Schema.Types.ObjectId, ref: 'Advisor' },
-  },
+  advisor: { type: Schema.Types.ObjectId, ref: 'Advisor' },
   storeID: { type: Schema.Types.ObjectId, ref: 'StoreID' },
-  user: { type: Schema.Types.ObjectId, ref: 'user' },
+  user: { type: Schema.Types.ObjectId, ref: 'User' },
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,
@@ -48,7 +46,6 @@ const userSchema = new Schema({
     select: false,
   },
 });
-//attach user to advisor
 
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
@@ -60,13 +57,20 @@ userSchema.pre('save', async function (next) {
 });
 
 userSchema.pre('save', function (next) {
+  // password change time setter, skipped if not modified or new user
   if (!this.isModified('password') || this.isNew) {
     return next();
   }
   this.passwordChangedAt = Date.now() - 1000;
   next();
 });
-
+// populate the users advisor into the find
+userSchema.pre('find', function (next) {
+  this.populate('advisor');
+  next();
+});
+// method to check if matching password hashes
+// candidate recieved from client, user from a user document
 userSchema.methods.correctPassword = async function (
   candidatePassword,
   userPassword
@@ -74,7 +78,7 @@ userSchema.methods.correctPassword = async function (
   //console.log(candidatePassword, userPassword);
   return await bcrypt.compare(candidatePassword, userPassword);
 };
-
+// used for checking validity of JWT, if password changed after JWT was signed succeed and resign
 userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
   if (this.passwordChangedAt) {
     const changedTimestamp = parseInt(
@@ -85,7 +89,7 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
   }
   return false;
 };
-
+// cryptographically create reset token for password reset
 userSchema.methods.createPasswordResetToken = function () {
   const resetToken = crypto.randomBytes(32).toString('hex');
 
