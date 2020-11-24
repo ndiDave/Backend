@@ -34,6 +34,7 @@ const userSchema = new Schema({
       message: 'Passwords are not the same',
     },
   },
+
   advisor: { type: Schema.Types.ObjectId, ref: 'Advisor' },
   storeID: { type: Schema.Types.ObjectId, ref: 'StoreID' },
   user: { type: Schema.Types.ObjectId, ref: 'User' },

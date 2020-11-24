@@ -78,5 +78,5 @@ class Stream extends mongoose.SchemaType {
     }
 }
 
-// Don't forget to add `Stream` to the type registry
+// Don't forget to add `Stream` to the type 
 mongoose.Schema.Types.Stream = Stream;

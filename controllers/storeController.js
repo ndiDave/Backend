@@ -29,11 +29,13 @@ exports.getAllStores = catchAsync(async (req, res, next) => {
 
 //GET a Specific Store by Store ID
 exports.getStore = catchAsync(async (req, res, next) => {
+
   const store = await Store.findById(req.params.id);
 
   if (!store) {
     return next(new AppError('No Stores Available', 404));
   }
+
 
   return res.status(200).json({ status: 'success', data: { store } });
 });
@@ -57,6 +59,7 @@ exports.updateStore = catchAsync(async (req, res, next) => {
     });
   }
   res.status(200).json({ status: 'success', data: { doc } });
+
 });
 
 // Delete Store
@@ -79,3 +82,4 @@ exports.deleteStore = catchAsync(async (req, res, next) => {
     });
   }
 });
+
