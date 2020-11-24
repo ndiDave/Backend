@@ -44,7 +44,6 @@ const advisorSchema = new Schema({
   },
   referralCode: {
     type: String,
-    required: true,
     unique: true,
   },
   clients: {
@@ -87,6 +86,11 @@ advisorSchema.pre('save', function (next) {
     this.referralCode = crypto.randomBytes(8).toString('hex');
     next();
   }
+  next();
+});
+// populate clients on find
+advisorSchema.pre('find', function (next) {
+  this.populate('clients');
   next();
 });
 //Methods
